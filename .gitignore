@@ -1,0 +1,22 @@
+# Ren'Py 编译产物
+*.rpyc
+game/cache/
+game/saves/
+
+# Ren'Py 运行时日志
+errors.txt
+log.txt
+traceback.txt
+game/errors.txt
+game/log.txt
+game/traceback.txt
+
+# mimocode 会话产物
+.mimocode/
+
+# zcode 会话产物
+.zcode/
+
+# Python
+__pycache__/
+*.pyc
