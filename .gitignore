@@ -20,3 +20,4 @@ game/traceback.txt
 # Python
 __pycache__/
 *.pyc
+android.keystore

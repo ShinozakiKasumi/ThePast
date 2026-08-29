@@ -1,0 +1,21 @@
+{
+    "expansion": false,
+    "google_play_key": null,
+    "google_play_salt": null,
+    "heap_size": "3",
+    "icon_name": "The Past",
+    "include_pil": false,
+    "include_sqlite": false,
+    "layout": null,
+    "name": "The Past",
+    "numeric_version": 1,
+    "orientation": "sensorLandscape",
+    "package": "moe.rikka.thepast",
+    "permissions": [],
+    "source": false,
+    "store": "none",
+    "update_always": false,
+    "update_icons": true,
+    "update_keystores": true,
+    "version": "0.1.0"
+}

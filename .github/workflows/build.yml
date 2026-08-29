@@ -34,3 +34,39 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*.zip
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Download Ren'Py SDK + RAPT
+        run: |
+          curl -sL -o renpy.tar.bz2 https://www.renpy.org/dl/8.5.3/renpy-8.5.3-sdk.tar.bz2
+          tar -xjf renpy.tar.bz2
+          curl -sL -o rapt.zip https://www.renpy.org/dl/8.5.3/renpy-8.5.3-rapt.zip
+          unzip -q rapt.zip -d /tmp/rapt && mv /tmp/rapt/rapt renpy-8.5.3-sdk/rapt
+
+      - name: Install Android SDK
+        run: |
+          yes | ./renpy-8.5.3-sdk/lib/py3-linux-x86_64/python tools/rapt_run.py "$PWD/renpy-8.5.3-sdk" installsdk
+
+      - name: Restore signing keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > android.keystore
+
+      - name: Build APK
+        run: |
+          BROWSER=/bin/true ./renpy-8.5.3-sdk/renpy.sh ./renpy-8.5.3-sdk/launcher android_build . --destination dist
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ThePast-android
+          path: dist/*.apk
+          if-no-files-found: error
