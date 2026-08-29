@@ -1,0 +1,36 @@
+name: build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Ren'Py SDK
+        run: |
+          curl -sL -o renpy.tar.bz2 https://www.renpy.org/dl/8.5.3/renpy-8.5.3-sdk.tar.bz2
+          7z x renpy.tar.bz2 -so | 7z x -si -ttar
+
+      - name: Build Windows distribution
+        run: |
+          & ".\renpy-8.5.3-sdk\renpy.exe" . lint
+          & ".\renpy-8.5.3-sdk\renpy.exe" ".\renpy-8.5.3-sdk\launcher" distribute . --package win --destination dist
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ThePast-windows
+          path: dist/*.zip
+          if-no-files-found: error
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
